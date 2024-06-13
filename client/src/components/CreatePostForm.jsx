@@ -1,6 +1,32 @@
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 function CreatePostForm() {
+  const navigate = useNavigate();
+
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
+  const createPost = async () => {
+    try {
+      await axios.post("http://localhost:4000/posts", {
+        title,
+        content,
+      });
+      navigate("/");
+    } catch (error) {
+      console.error("error");
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    createPost();
+  };
+
   return (
-    <form className="post-form">
+    <form className="post-form" onSubmit={handleSubmit}>
       <h1>Create Post Form</h1>
       <div className="input-container">
         <label>
@@ -10,7 +36,10 @@ function CreatePostForm() {
             name="title"
             type="text"
             placeholder="Enter title here"
-            onChange={() => {}}
+            onChange={(event) => {
+              setTitle(event.target.value);
+            }}
+            value={title}
           />
         </label>
       </div>
@@ -22,9 +51,12 @@ function CreatePostForm() {
             name="content"
             type="text"
             placeholder="Enter content here"
-            onChange={() => {}}
+            onChange={(event) => {
+              setContent(event.target.value);
+            }}
             rows={4}
             cols={30}
+            value={content}
           />
         </label>
       </div>
